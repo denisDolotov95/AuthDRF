@@ -24,34 +24,37 @@ from drf_yasg import openapi
 from pet_project.app import views
 
 router = routers.DefaultRouter()
+router.register("auth", views.AuthenticationUserViewSet, basename="auth")
+router.register("user-func", views.UserFunctionsViewSet, basename="user-functions")
 router.register("users", views.UserViewSet, basename="user")
-router.register("login", views.LoginUserViewSet, basename="login")
-router.register("logout", views.LogoutUserViewSet, basename="logout")
 router.register("groups", views.GroupsViewSet)
-router.register("my-info", views.MyInfoViewSet, basename="my-info")
 # router.register("my-info-edit", views.MyInfoEditViewSet, basename="my-info-edit")
-router.register("register", views.RegisterUserViewSet, basename="register")
-router.register("delete-user", views.UserDeleteViewSet, basename="delete-user")
 
 
 schema_view = get_schema_view(
-   openapi.Info(
-      title="Snippets API",
-      default_version='v1',
-      description="Test description",
-      terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="contact@snippets.local"),
-      license=openapi.License(name="BSD License"),
-   ),
-   public=True,
-   permission_classes=(permissions.AllowAny,),
+    openapi.Info(
+        title="Snippets API",
+        default_version="v1",
+        description="Test description",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="contact@snippets.local"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
 )
 
 urlpatterns = [
-    path("api/", include(router.urls)),
-    path("api/admin/", admin.site.urls),
-    path("api/auth/", include("rest_framework.urls", namespace="rest_framework")),
-    path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc')
+    path("", include(router.urls)),
+    path("admin/", admin.site.urls),
+    # path("api/auth/", include("rest_framework.urls", namespace="rest_framework")),
+    path(
+        "swagger<format>/", schema_view.without_ui(cache_timeout=0), name="schema-json"
+    ),
+    path(
+        "swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
 ]

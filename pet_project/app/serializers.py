@@ -2,13 +2,12 @@ from django.contrib.auth.models import Group, User
 from rest_framework import serializers
 
 
-class UserLoginSerilaizer(serializers.ModelSerializer):
+class UserAuthenticationSerilaizer(serializers.ModelSerializer):
     """
-    Серилизатор для регистрации новго пользователя.
-    Использует ModelSerializer, т.к. работаем с моделью User.
+    Серилизатор для аутентификации новго пользователя.
     """
 
-    email = serializers.EmailField(required=True)
+    email = serializers.EmailField(required=True, style={"input_type": "email"})
     password = serializers.CharField(required=True, style={"input_type": "password"})
 
     class Meta:
@@ -17,29 +16,24 @@ class UserLoginSerilaizer(serializers.ModelSerializer):
         fields = ["email", "password"]
 
 
-class UserLogoutSerilaizer(serializers.ModelSerializer):
-    """
-    Серилизатор для регистрации новго пользователя.
-    Использует ModelSerializer, т.к. работаем с моделью User.
-    """
-
-    class Meta:
-
-        model = User
-        fields = ["last_login", "username", "email"]
-
-
 class UserRegistrationSerilaizer(serializers.ModelSerializer):
     """
     Серилизатор для регистрации новго пользователя.
-    Использует ModelSerializer, т.к. работаем с моделью User.
     """
 
+    first_name = serializers.CharField(
+        write_only=True,
+        required=True,
+    )
+    last_name = serializers.CharField(write_only=True, required=True)
     password = serializers.CharField(
         write_only=True, required=True, style={"input_type": "password"}
     )
     password2 = serializers.CharField(
         write_only=True, required=True, style={"input_type": "password"}
+    )
+    email = serializers.EmailField(
+        write_only=True, required=True, style={"input_type": "email"}
     )
 
     class Meta:
@@ -80,7 +74,7 @@ class UserRegistrationSerilaizer(serializers.ModelSerializer):
             password=validated_data["password"],
             last_name=validated_data["last_name"],
             first_name=validated_data["first_name"],
-            is_active=False,
+            is_active=True,
         )
         return user
 
@@ -93,49 +87,42 @@ class UserDeleteSerilaizer(serializers.ModelSerializer):
         fields = ["last_login", "username", "email"]
 
 
-class MyInfoSerializer(serializers.ModelSerializer):
+class UserInfoSerializer(serializers.ModelSerializer):
+
+    username = serializers.CharField(
+        write_only=True,
+        required=False,
+    )
 
     class Meta:
         model = User
         fields = [
-            "url",
             "username",
             "first_name",
             "last_name",
             "is_superuser",
-            "is_active",
             "email",
             "date_joined",
+            "last_login",
         ]
-        read_only_fields = ["date_joined", "is_active", "is_superuser", "url"]
-
-
-# class MyInfoEditSerializer(serializers.ModelSerializer):
-
-#     class Meta:
-#         model = User
-#         fields = [
-#             "username",
-#             "first_name",
-#             "last_name",
-#         ]
+        read_only_fields = ["last_login", "date_joined", "is_superuser"]
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = [
-            "url",
-            "username",
-            "first_name",
-            "last_name",
-            "is_superuser",
-            "is_active",
-            "email",
-            "date_joined",
-        ]
-        # fields = "__all__"
+        # fields = [
+        #     "url",
+        #     "username",
+        #     "first_name",
+        #     "last_name",
+        #     "is_superuser",
+        #     "is_active",
+        #     "email",
+        #     "date_joined",
+        # ]
+        fields = "__all__"
         read_only_fields = ["date_joined", "is_active", "url"]
 
 
