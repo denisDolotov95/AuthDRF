@@ -180,7 +180,7 @@ class AuthenticationUserViewSet(viewsets.GenericViewSet):
 
 class UserViewSet(viewsets.ModelViewSet):
     """
-    API-представление для просмотра своего профиля пользовтеля.
+    API-представление для манипуляции (CRUD) пользователями.
     """
 
     queryset = User.objects.all().order_by("-date_joined")
@@ -190,7 +190,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class GroupsViewSet(viewsets.ModelViewSet):
     """
-    API-представление для просмотра и добавления групп пользователей.
+    API-представление для манипуляции (CRUD) группами.
     """
 
     queryset = Group.objects.all().order_by("name")
