@@ -42,10 +42,9 @@ class UserFunctionsViewSet(viewsets.GenericViewSet):
         """Информация пользователя."""
         queryset = self.get_queryset()
         serializer_class = self.get_serializer_class()
-        serializer = serializer_class(data=queryset)
+        serializer = serializer_class(queryset)
 
-        if serializer.is_valid(raise_exception=True):
-            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(
         methods=["delete"],
