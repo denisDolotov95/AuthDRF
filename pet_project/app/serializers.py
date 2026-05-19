@@ -1,5 +1,32 @@
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import Group, User, AnonymousUser
 from rest_framework import serializers
+
+
+class UserLoginSerilaizer(serializers.ModelSerializer):
+    """
+    Серилизатор для регистрации новго пользователя.
+    Использует ModelSerializer, т.к. работаем с моделью User.
+    """
+
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(required=True, style={"input_type": "password"})
+
+    class Meta:
+
+        model = User
+        fields = ["email", "password"]
+
+
+class UserLogoutSerilaizer(serializers.ModelSerializer):
+    """
+    Серилизатор для регистрации новго пользователя.
+    Использует ModelSerializer, т.к. работаем с моделью User.
+    """
+
+    class Meta:
+
+        model = User
+        fields = ["last_login", "username", "email"]
 
 
 class UserRegistrationSerilaizer(serializers.ModelSerializer):
@@ -53,15 +80,44 @@ class UserRegistrationSerilaizer(serializers.ModelSerializer):
             password=validated_data["password"],
             last_name=validated_data["last_name"],
             first_name=validated_data["first_name"],
+            is_active=False,
         )
         return user
+
+
+class MyInfoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [
+            "url",
+            "username",
+            "first_name",
+            "last_name",
+            "is_superuser",
+            "is_active",
+            "email",
+            "date_joined",
+        ]
+        read_only_fields = ["date_joined", "is_active", "is_superuser", "url"]
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ["url", "username", "email", "groups"]
+        fields = [
+            "url",
+            "username",
+            "first_name",
+            "last_name",
+            "is_superuser",
+            "is_active",
+            "email",
+            "date_joined",
+        ]
+        # fields = "__all__"
+        read_only_fields = ["date_joined", "is_active", "url"]
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
