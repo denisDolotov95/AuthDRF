@@ -138,7 +138,7 @@ class AuthenticationUserViewSet(viewsets.GenericViewSet):
                     status=status.HTTP_404_NOT_FOUND,
                 )
 
-            if user.is_active:
+            if not user.is_active:
                     return Response(
                     {"detail": "Account has been deleted."},
                     status=status.HTTP_404_NOT_FOUND,
