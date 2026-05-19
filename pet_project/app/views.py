@@ -1,22 +1,18 @@
 # import logging
 
-from django.contrib.auth.models import Group, User
-
 from django.contrib.auth import login, logout
-from rest_framework import permissions, viewsets, status
+from django.contrib.auth.models import Group, User
+from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
+from .serializers import (GroupSerializer, UserAuthenticationSerilaizer,
+                          UserInfoSerializer, UserRegistrationSerilaizer,
+                          UserSerializer)
 
 # from rest_framework.exceptions import MethodNotAllowed
 # from rest_framework.views import APIView
 
-from .serializers import (
-    GroupSerializer,
-    UserInfoSerializer,
-    UserSerializer,
-    UserRegistrationSerilaizer,
-    UserAuthenticationSerilaizer,
-)
 
 
 class UserFunctionsViewSet(viewsets.GenericViewSet):

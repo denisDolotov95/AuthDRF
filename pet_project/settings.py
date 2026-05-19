@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Castom settings
@@ -91,11 +91,11 @@ WSGI_APPLICATION = "pet_project.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "test",
-        "USER": "postgres",
-        "PASSWORD": "example",
-        "HOST": "192.168.0.101",  # Or your DB host
-        "PORT": "5432",  # Default Postgres port
+        "NAME": os.environ.get("POSTGRES_DB", "test"),
+        "USER": os.environ.get("POSTGRES_USER", "postgres"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "example"),
+        "HOST": os.environ.get("POSTGRES_HOST", "192.168.0.101"),  # Or your DB host
+        "PORT": os.environ.get("POSTGRES_PORT", "5432"),  # Default Postgres port
     }
 }
 
