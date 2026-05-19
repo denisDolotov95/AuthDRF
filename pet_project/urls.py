@@ -22,15 +22,16 @@ from rest_framework import routers
 from pet_project.app import views
 
 router = routers.DefaultRouter()
+router.register("users", views.UserViewSet, basename="user")
+router.register("login", views.LoginUserViewSet, basename="login")
+router.register("logout", views.LogoutUserViewSet, basename="logout")
 router.register("groups", views.GroupsViewSet)
-router.register("users", views.UserViewSet, basename='user')
-router.register("login", views.LoginUserViewSet, basename='login')
-router.register("logout", views.LogoutUserViewSet, basename='logout')
-router.register("my-info", views.MyInfoViewSet, basename='my-info')
-router.register("register", views.RegisterUserViewSet, basename='register')
+router.register("my-info", views.MyInfoViewSet, basename="my-info")
+router.register("register", views.RegisterUserViewSet, basename="register")
+router.register("delete-user", views.UserDeleteViewSet, basename="delete-user")
 
 urlpatterns = [
     path("api/", include(router.urls)),
     path("api/admin/", admin.site.urls),
-    path("api/auth/", include("rest_framework.urls", namespace="rest_framework"))
+    path("api/auth/", include("rest_framework.urls", namespace="rest_framework")),
 ]

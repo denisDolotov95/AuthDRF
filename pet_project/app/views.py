@@ -1,4 +1,4 @@
-import logging
+# import logging
 
 from django.contrib.auth.models import Group, User
 
@@ -18,6 +18,28 @@ from .serializers import (
     UserLoginSerilaizer,
     UserLogoutSerilaizer,
 )
+
+
+class UserDeleteViewSet(viewsets.ModelViewSet):
+
+    http_method_names = ["get", "delete"]
+
+    serializer_class = MyInfoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+
+        return User.objects.filter(id=self.request.user.id)
+
+    def delete(self, request):
+
+        if request.user.is_active:
+            request.user.is_active = False
+            request.user.save()
+            logout(request)
+            return Response({"detail": "Account is deleted"})
+
+        return Response({"detail": "Pass"})
 
 
 class LoginUserViewSet(viewsets.ModelViewSet):
@@ -47,7 +69,7 @@ class LoginUserViewSet(viewsets.ModelViewSet):
 
             password = serializer.data.get("password")
 
-            if user is not None and user.check_password(password):
+            if user is not None and user.is_active and user.check_password(password):
 
                 login(request, user)  # создание сессии и установка куки
 
@@ -61,6 +83,7 @@ class LoginUserViewSet(viewsets.ModelViewSet):
             return Response(
                 {"detail": "Wrong credentials."}, status=status.HTTP_401_UNAUTHORIZED
             )
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

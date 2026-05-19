@@ -1,4 +1,4 @@
-from django.contrib.auth.models import Group, User, AnonymousUser
+from django.contrib.auth.models import Group, User
 from rest_framework import serializers
 
 
@@ -83,6 +83,14 @@ class UserRegistrationSerilaizer(serializers.ModelSerializer):
             is_active=False,
         )
         return user
+
+
+class UserDeleteSerilaizer(serializers.ModelSerializer):
+
+    class Meta:
+
+        model = User
+        fields = ["last_login", "username", "email"]
 
 
 class MyInfoSerializer(serializers.ModelSerializer):
