@@ -165,7 +165,7 @@ class AuthenticationUserViewSet(viewsets.GenericViewSet):
         """Регистрация нового польователя.
         """
         serializer_class = self.get_serializer_class()
-        serializer = serializer_class(request.data)
+        serializer = serializer_class(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
