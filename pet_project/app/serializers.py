@@ -82,7 +82,6 @@ class UserRegistrationSerilaizer(serializers.ModelSerializer):
 class UserInfoSerializer(serializers.ModelSerializer):
 
     username = serializers.CharField(
-        write_only=True,
         required=False,
     )
 
@@ -99,6 +98,11 @@ class UserInfoSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["last_login", "date_joined", "is_superuser"]
 
+    def validate_email(self, value):
+        # Проверяем уникальность при создании нового пользователя
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("The user already exists with the current email address.")
+        return value
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
 
