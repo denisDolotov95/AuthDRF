@@ -89,7 +89,7 @@ class AuthenticationUserViewSet(viewsets.GenericViewSet):
     def get_serializer_class(self):
         if self.action == "login":
             return UserAuthenticationSerilaizer
-        if self.action == "register":
+        elif self.action == "register":
             return UserRegistrationSerilaizer
         return super().get_serializer_class()
 
@@ -154,6 +154,8 @@ class AuthenticationUserViewSet(viewsets.GenericViewSet):
         permission_classes=(permissions.AllowAny,),
     )
     def register(self, request, pk=None):
+        """Регистрация нового польователя.
+        """
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(request.data)
 

@@ -79,14 +79,6 @@ class UserRegistrationSerilaizer(serializers.ModelSerializer):
         return user
 
 
-class UserDeleteSerilaizer(serializers.ModelSerializer):
-
-    class Meta:
-
-        model = User
-        fields = ["last_login", "username", "email"]
-
-
 class UserInfoSerializer(serializers.ModelSerializer):
 
     username = serializers.CharField(
