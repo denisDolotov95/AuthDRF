@@ -23,6 +23,8 @@ class UserFunctionsViewSet(viewsets.GenericViewSet):
 
     http_method_names = ["get", "patch", "delete"]
 
+    # serializer_class = UserInfoSerializer
+
     def get_queryset(self):
         return User.objects.get(id=self.request.user.id)
 
@@ -58,7 +60,7 @@ class UserFunctionsViewSet(viewsets.GenericViewSet):
         request.user.is_active = False
         request.user.save()
         logout(request)
-        return Response({"detail": "Account is deleted"})
+        return Response({"detail": "Account is deleted."})
 
     @action(
         methods=["patch"],
@@ -84,6 +86,8 @@ class AuthenticationUserViewSet(viewsets.GenericViewSet):
     """
     API-представление для аутентификации/регистрации пользователя.
     """
+
+    # serializer_class = UserAuthenticationSerilaizer
 
     def get_serializer_class(self):
         if self.action == "login":
@@ -134,9 +138,14 @@ class AuthenticationUserViewSet(viewsets.GenericViewSet):
                     status=status.HTTP_404_NOT_FOUND,
                 )
 
-            password = serializer.data.get("password")
+            if user.is_active:
+                    return Response(
+                    {"detail": "Account has been deleted."},
+                    status=status.HTTP_404_NOT_FOUND,
+                )                
 
-            if user is not None and user.is_active and user.check_password(password):
+            password = serializer.data.get("password")
+            if user is not None and user.check_password(password):
                 login(request, user)  # создание сессии и установка куки
                 return Response(
                     {"detail": "Authentication completed."}, status=status.HTTP_200_OK
