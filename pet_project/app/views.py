@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from .serializers import (
     GroupSerializer,
     MyInfoSerializer,
+    MyInfoEditSerializer,
     UserSerializer,
     UserRegistrationSerilaizer,
     UserLoginSerilaizer,
@@ -38,8 +39,6 @@ class UserDeleteViewSet(viewsets.ModelViewSet):
             request.user.save()
             logout(request)
             return Response({"detail": "Account is deleted"})
-
-        return Response({"detail": "Pass"})
 
 
 class LoginUserViewSet(viewsets.ModelViewSet):
@@ -80,11 +79,9 @@ class LoginUserViewSet(viewsets.ModelViewSet):
                     {"detail": "Authentication completed."}, status=status.HTTP_200_OK
                 )
 
-            return Response(
-                {"detail": "Wrong credentials."}, status=status.HTTP_401_UNAUTHORIZED
-            )
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"detail": "Wrong credentials."}, status=status.HTTP_401_UNAUTHORIZED
+        )
 
 
 class LogoutUserViewSet(viewsets.ModelViewSet):
@@ -119,7 +116,7 @@ class RegisterUserViewSet(viewsets.ModelViewSet):
     serializer_class = UserRegistrationSerilaizer
     permission_classes = (permissions.AllowAny,)  # доступ для всех
 
-    def create(self, request, *args, **kwargs):
+    def create(self, request):
 
         serializer = UserRegistrationSerilaizer(data=request.data)
 
@@ -134,7 +131,7 @@ class RegisterUserViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class MyInfoViewSet(viewsets.ModelViewSet):
+class MyInfoViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API-представление для просмотра своего профиля пользовтеля.
     """
@@ -144,6 +141,21 @@ class MyInfoViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return User.objects.filter(id=self.request.user.id)
+
+
+# class MyInfoEditViewSet(viewsets.ModelViewSet):
+#     """
+#     API-представление для изменения своего профиля пользовтеля.
+#     """
+
+#     http_method_names = ["patch"]
+
+#     serializer_class = MyInfoEditSerializer
+#     permission_classes = [permissions.IsAuthenticated]
+
+#     def get_queryset(self):
+
+#         return User.objects.filter(id=self.request.user.id)
 
 
 class UserViewSet(viewsets.ModelViewSet):

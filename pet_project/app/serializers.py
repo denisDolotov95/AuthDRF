@@ -110,6 +110,17 @@ class MyInfoSerializer(serializers.ModelSerializer):
         read_only_fields = ["date_joined", "is_active", "is_superuser", "url"]
 
 
+# class MyInfoEditSerializer(serializers.ModelSerializer):
+
+#     class Meta:
+#         model = User
+#         fields = [
+#             "username",
+#             "first_name",
+#             "last_name",
+#         ]
+
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
