@@ -229,9 +229,16 @@ class BusinessElementOrderViewSet(viewsets.ModelViewSet):
 
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    permission_classes = [DynamicGroupPermission]
+    permission_classes = [DynamicGroupPermission, permissions.IsAuthenticated]
     # Указываем, какой это бизнес-элемент для проверки в БД
     business_element = "order"
+
+    def perform_create(self, serializer):
+        """
+        Переопределяем сохранение, чтобы подставить текущего пользователя.
+        """
+        serializer.save(creator=self.request.user)
+        return None
 
 
 class BusinessElementProductViewSet(viewsets.ModelViewSet):
@@ -241,6 +248,13 @@ class BusinessElementProductViewSet(viewsets.ModelViewSet):
 
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [DynamicGroupPermission]
+    permission_classes = [DynamicGroupPermission, permissions.IsAuthenticated]
     # Указываем, какой это бизнес-элемент для проверки в БД
     business_element = "product"
+
+    def perform_create(self, serializer):
+        """
+        Переопределяем сохранение, чтобы подставить текущего пользователя.
+        """
+        serializer.save(creator=self.request.user)
+        return None

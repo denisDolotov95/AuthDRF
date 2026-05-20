@@ -1,6 +1,6 @@
 import uuid
 
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.db import models
 
 # Create your models here.
@@ -29,6 +29,7 @@ class Order(models.Model):
 
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100, default=False)
+    creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=False)
     element = models.ForeignKey(
         BusinessElement, on_delete=models.CASCADE
     )  # Например, 'order', 'product'
@@ -44,6 +45,7 @@ class Product(models.Model):
 
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100, default=False)
+    creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=False)
     element = models.ForeignKey(
         BusinessElement, on_delete=models.CASCADE
     )  # Например, 'orders', 'products'

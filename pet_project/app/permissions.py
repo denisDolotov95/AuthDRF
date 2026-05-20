@@ -55,12 +55,18 @@ class DynamicGroupPermission(permissions.BasePermission):
             access = self.__get_access(user, element)
 
             if request.method in permissions.SAFE_METHODS:  # GET
-                return access.read_all_permission or access.read_permission
+                return access.read_all_permission or (
+                    access.read_permission and obj.creator_id == user.id
+                )
 
             if request.method in ["PATCH", "PUT"]:
-                return access.update_all_permission or access.update_permission
+                return access.update_all_permission or (
+                    access.update_permission and obj.creator_id == user.id
+                )
 
             if request.method == "DELETE":
-                return access.delete_all_permission or access.delete_permission
+                return access.delete_all_permission or (
+                    access.delete_permission and obj.creator_id == user.id
+                )
         except AccessGroupRule.DoesNotExist:
             return False
