@@ -171,6 +171,13 @@ class AuthenticationUserViewSet(viewsets.GenericViewSet):
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(data=request.data)
 
+        user: User = request.user
+        if user.is_authenticated:
+            return Response(
+                {"detail": f"Already registered!"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(
