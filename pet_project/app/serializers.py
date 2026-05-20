@@ -1,6 +1,8 @@
 from django.contrib.auth.models import Group, User
 from rest_framework import serializers
 
+from .models import BusinessElement, Order, AccessGroupRule
+
 
 class UserAuthenticationSerilaizer(serializers.ModelSerializer):
     """
@@ -95,14 +97,18 @@ class UserInfoSerializer(serializers.ModelSerializer):
             "email",
             "date_joined",
             "last_login",
+            "groups",
         ]
-        read_only_fields = ["last_login", "date_joined", "is_superuser"]
+        read_only_fields = ["last_login", "date_joined", "is_superuser", "groups"]
 
     def validate_email(self, value):
         # Проверяем уникальность при создании нового пользователя
         if User.objects.filter(email=value).exists():
-            raise serializers.ValidationError("The user already exists with the current email address.")
+            raise serializers.ValidationError(
+                "The user already exists with the current email address."
+            )
         return value
+
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -127,3 +133,26 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
         fields = ["url", "name"]
+
+
+class BusinessElementSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BusinessElement
+        fields = "__all__"
+        read_only_fields = ["code"]
+
+
+class AccessGroupRuleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AccessGroupRule
+        fields = "__all__"
+
+
+# class OrderSerializer(serializers.HyperlinkedModelSerializer):
+
+#     class Meta:
+#         model = Order
+#         fields = ["type", "code"]
+#         read_only_fields = ["code"]

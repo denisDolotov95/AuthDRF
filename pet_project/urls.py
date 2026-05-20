@@ -27,6 +27,8 @@ router = routers.DefaultRouter()
 router.register("auth", views.AuthenticationUserViewSet, basename="auth")
 router.register("user-func", views.UserFunctionsViewSet, basename="user-functions")
 router.register("users", views.UserViewSet, basename="user")
+router.register("element", views.BusinessElementViewSet, basename="element")
+router.register("access-rule-element", views.AccessGroupRuleViewSet, basename="access-rule-element")
 router.register("groups", views.GroupsViewSet)
 # router.register("my-info-edit", views.MyInfoEditViewSet, basename="my-info-edit")
 

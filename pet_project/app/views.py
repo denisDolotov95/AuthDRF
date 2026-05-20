@@ -6,13 +6,20 @@ from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .serializers import (GroupSerializer, UserAuthenticationSerilaizer,
-                          UserInfoSerializer, UserRegistrationSerilaizer,
-                          UserSerializer)
+from .serializers import (
+    UserSerializer,
+    GroupSerializer,
+    UserAuthenticationSerilaizer,
+    UserInfoSerializer,
+    UserRegistrationSerilaizer,
+    BusinessElementSerializer,
+    AccessGroupRuleSerializer,
+)
+from .models import BusinessElement, AccessGroupRule
+from .permissions import DynamicGroupPermission
 
 # from rest_framework.exceptions import MethodNotAllowed
 # from rest_framework.views import APIView
-
 
 
 class UserFunctionsViewSet(viewsets.GenericViewSet):
@@ -135,10 +142,10 @@ class AuthenticationUserViewSet(viewsets.GenericViewSet):
                 )
 
             if not user.is_active:
-                    return Response(
+                return Response(
                     {"detail": "Account has been deleted."},
                     status=status.HTTP_404_NOT_FOUND,
-                )                
+                )
 
             password = serializer.data.get("password")
             if user is not None and user.check_password(password):
@@ -158,8 +165,7 @@ class AuthenticationUserViewSet(viewsets.GenericViewSet):
         permission_classes=(permissions.AllowAny,),
     )
     def register(self, request, pk=None):
-        """Регистрация нового польователя.
-        """
+        """Регистрация нового польователя."""
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(data=request.data)
 
@@ -192,3 +198,37 @@ class GroupsViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all().order_by("name")
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+
+
+class BusinessElementViewSet(viewsets.ModelViewSet):
+    """
+    API-представление возможные типы элементов.
+    """
+
+    queryset = BusinessElement.objects.all()
+    serializer_class = BusinessElementSerializer
+    permission_classes = [permissions.IsAdminUser]
+    # Указываем, какой это бизнес-элемент для проверки в БД
+
+
+class AccessGroupRuleViewSet(viewsets.ModelViewSet):
+    """
+    API-представление для предоставления прав CRUD, для элементов.
+    """
+
+    queryset = AccessGroupRule.objects.all()
+    serializer_class = AccessGroupRuleSerializer
+    permission_classes = [permissions.IsAdminUser]
+    # Указываем, какой это бизнес-элемент для проверки в БД
+
+
+# class BusinessElementOrderViewSet(viewsets.ModelViewSet):
+#     """
+#     API-представление для манипуляции элементами товара.
+#     """
+
+#     queryset = BusinessElement.objects.all()
+#     serializer_class = BusinessElementSerializer
+#     permission_classes = [DynamicGroupPermission]
+#     # Указываем, какой это бизнес-элемент для проверки в БД
+#     business_element = 'orders'

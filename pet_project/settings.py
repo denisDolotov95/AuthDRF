@@ -45,6 +45,7 @@ REST_FRAMEWORK = {
 # Application definition
 
 INSTALLED_APPS = [
+    "pet_project.app",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
