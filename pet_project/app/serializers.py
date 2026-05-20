@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Group, User
 from rest_framework import serializers
 
-from .models import BusinessElement, Order, AccessGroupRule
+from .models import AccessGroupRule, BusinessElement, Order, Product
 
 
 class UserAuthenticationSerilaizer(serializers.ModelSerializer):
@@ -150,9 +150,37 @@ class AccessGroupRuleSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-# class OrderSerializer(serializers.HyperlinkedModelSerializer):
+class OrderSerializer(serializers.HyperlinkedModelSerializer):
 
-#     class Meta:
-#         model = Order
-#         fields = ["type", "code"]
-#         read_only_fields = ["code"]
+    class Meta:
+        model = Order
+        fields = ["id", "name", "description"]
+        read_only_fields = ["id"]
+        # fields = "__all__"
+
+    def create(self, validated_data: dict) -> User:
+        """
+        Создает и возвращает новый ордер.
+        """
+        # Убираем 'password2', т.к. его нет в модели User
+        b_element = BusinessElement.objects.get(type="order")
+        order = Order.objects.create(**validated_data, element_id=b_element.id)
+        return order
+
+
+class ProductSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Product
+        fields = ["id", "name", "description"]
+        read_only_fields = ["id"]
+        # fields = "__all__"
+
+    def create(self, validated_data: dict) -> User:
+        """
+        Создает и возвращает новый продукт.
+        """
+        # Убираем 'password2', т.к. его нет в модели User
+        b_element = BusinessElement.objects.get(type="product")
+        prodact = Product.objects.create(**validated_data, element_id=b_element.id)
+        return prodact

@@ -1,22 +1,9 @@
 import uuid
-from django.db import models
+
 from django.contrib.auth.models import Group
+from django.db import models
 
 # Create your models here.
-
-
-# class Prodact(models.Model):
-#     """
-#     Объекты приложения: товары, заказы и т.д.
-#     """
-
-#     name = models.CharField(max_length=100, unique=True)
-#     code = models.UUIDField(
-#         default=uuid.uuid4(), unique=True, editable=False
-#     )  # Например, 'orders', 'products'
-
-#     def __str__(self):
-#         return self.name
 
 
 class BusinessElement(models.Model):
@@ -29,24 +16,40 @@ class BusinessElement(models.Model):
     type = models.CharField(max_length=100, unique=True)
     code = models.UUIDField(
         default=uuid.uuid4, unique=True, editable=False
-    )  # Например, 'orders', 'products'
+    )  # Например, 'order', 'product'
 
     def __str__(self):
         return self.type
 
 
-# class Order(models.Model):
-#     """
-#     Объекты приложения: товары, заказы и т.д.
-#     """
+class Order(models.Model):
+    """
+    Объекты приложения: ордера.
+    """
 
-#     name = models.CharField(max_length=100, unique=True)
-#     element = models.ForeignKey(
-#         BusinessElement, on_delete=models.CASCADE
-#     )  # Например, 'orders', 'products'
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, default=False)
+    element = models.ForeignKey(
+        BusinessElement, on_delete=models.CASCADE
+    )  # Например, 'order', 'product'
 
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.name
+
+
+class Product(models.Model):
+    """
+    Объекты приложения: заказы.
+    """
+
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, default=False)
+    element = models.ForeignKey(
+        BusinessElement, on_delete=models.CASCADE
+    )  # Например, 'orders', 'products'
+
+    def __str__(self):
+        return self.name
 
 
 class AccessGroupRule(models.Model):

@@ -6,17 +6,19 @@ from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from .models import AccessGroupRule, BusinessElement, Product, Order
+from .permissions import DynamicGroupPermission
 from .serializers import (
-    UserSerializer,
+    AccessGroupRuleSerializer,
+    BusinessElementSerializer,
     GroupSerializer,
     UserAuthenticationSerilaizer,
     UserInfoSerializer,
     UserRegistrationSerilaizer,
-    BusinessElementSerializer,
-    AccessGroupRuleSerializer,
+    UserSerializer,
+    ProductSerializer,
+    OrderSerializer,
 )
-from .models import BusinessElement, AccessGroupRule
-from .permissions import DynamicGroupPermission
 
 # from rest_framework.exceptions import MethodNotAllowed
 # from rest_framework.views import APIView
@@ -208,7 +210,6 @@ class BusinessElementViewSet(viewsets.ModelViewSet):
     queryset = BusinessElement.objects.all()
     serializer_class = BusinessElementSerializer
     permission_classes = [permissions.IsAdminUser]
-    # Указываем, какой это бизнес-элемент для проверки в БД
 
 
 class AccessGroupRuleViewSet(viewsets.ModelViewSet):
@@ -219,16 +220,27 @@ class AccessGroupRuleViewSet(viewsets.ModelViewSet):
     queryset = AccessGroupRule.objects.all()
     serializer_class = AccessGroupRuleSerializer
     permission_classes = [permissions.IsAdminUser]
+
+
+class BusinessElementOrderViewSet(viewsets.ModelViewSet):
+    """
+    API-представление для манипуляции (CRUD) элементами: продукт.
+    """
+
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [DynamicGroupPermission]
     # Указываем, какой это бизнес-элемент для проверки в БД
+    business_element = "order"
 
 
-# class BusinessElementOrderViewSet(viewsets.ModelViewSet):
-#     """
-#     API-представление для манипуляции элементами товара.
-#     """
+class BusinessElementProductViewSet(viewsets.ModelViewSet):
+    """
+    API-представление для манипуляции (CRUD) элементами: ордер.
+    """
 
-#     queryset = BusinessElement.objects.all()
-#     serializer_class = BusinessElementSerializer
-#     permission_classes = [DynamicGroupPermission]
-#     # Указываем, какой это бизнес-элемент для проверки в БД
-#     business_element = 'orders'
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [DynamicGroupPermission]
+    # Указываем, какой это бизнес-элемент для проверки в БД
+    business_element = "product"
