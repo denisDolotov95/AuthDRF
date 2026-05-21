@@ -12,26 +12,31 @@ services:
       - postgresql:/var/lib/postgresql:rw
     networks:
       education:
-        ipv4_address: ${POSTGRES_HOST}
+        ipv4_address: ${DB_HOST}
     ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+      - ${DB_PORT}:${DB_PORT}
 
   django:
     container_name: django
     build: .
     entrypoint: [ "./entrypoint.sh" ]
-    command: [ "python3", "manage.py", "runserver", "0.0.0.0:${DJANGO_PORT}" ]
+    command: [ "python3", "manage.py", "runserver", "0.0.0.0:${DJ_PORT}" ]
     environment:
       - DB_HOST=${DB_HOST}
       - DB_USER=${DB_USER}
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
       - DB_PASSWORD=${DB_PASSWORD}
+      - DJ_ADMIN_USER=${DJ_ADMIN_USER}
+      - DJ_ADMIN_EMAIL=${DJ_ADMIN_EMAIL}
+      - DJ_ADMIN_PASSWORD=${DJ_ADMIN_PASSWORD}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PASSWORD=${DB_PASSWORD}
     networks:
       education:
-        ipv4_address: ${DJANGO_HOST}
+        ipv4_address: ${DJ_HOST}
     ports:
-      - ${DJANGO_PORT}:${DJANGO_PORT}
+      - ${DJ_PORT}:${DJ_PORT}
     depends_on:
       - postgres
 

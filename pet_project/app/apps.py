@@ -8,10 +8,11 @@ class AppConfig(AppConfig):
     name = "pet_project.app"
 
     def ready(self):
+
         User = get_user_model()
-        username = os.getenv("DJANGO_ADMIN_USER", "admin")
-        email = os.getenv("DJANGO_ADMIN_EMAIL", "admin@example.com")
-        password = os.getenv("DJANGO_ADMIN_PASSWORD", "admin")
+        username = os.getenv("DJ_ADMIN_USER", "admin")
+        email = os.getenv("DJ_ADMIN_EMAIL", "admin@example.com")
+        password = os.getenv("DJ_ADMIN_PASSWORD", "admin")
 
         # Защита от создания дубликата
         try:
