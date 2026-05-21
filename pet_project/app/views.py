@@ -6,19 +6,13 @@ from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .models import AccessGroupRule, BusinessElement, Product, Order
+from .models import AccessGroupRule, BusinessElement, Order, OrderItem, Product
 from .permissions import DynamicGroupPermission
-from .serializers import (
-    AccessGroupRuleSerializer,
-    BusinessElementSerializer,
-    GroupSerializer,
-    UserAuthenticationSerilaizer,
-    UserInfoSerializer,
-    UserRegistrationSerilaizer,
-    UserSerializer,
-    ProductSerializer,
-    OrderSerializer,
-)
+from .serializers import (AccessGroupRuleSerializer, BusinessElementSerializer,
+                          GroupSerializer, OrderItemSerializer,
+                          OrderSerializer, ProductSerializer,
+                          UserAuthenticationSerilaizer, UserInfoSerializer,
+                          UserRegistrationSerilaizer, UserSerializer)
 
 # from rest_framework.exceptions import MethodNotAllowed
 # from rest_framework.views import APIView
@@ -265,3 +259,15 @@ class BusinessElementProductViewSet(viewsets.ModelViewSet):
         """
         serializer.save(creator=self.request.user)
         return None
+
+
+class  BusinessElementOrderItemViewSet(viewsets.ModelViewSet):
+    """
+    API-представление для манипуляции (CRUD) элементами: ордер+продукт.
+    """
+
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderItemSerializer
+    permission_classes = [DynamicGroupPermission, permissions.IsAuthenticated]
+    # Указываем, какой это бизнес-элемент для проверки в БД
+    business_element = "orderItem"

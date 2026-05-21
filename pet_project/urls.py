@@ -25,13 +25,14 @@ from pet_project.app import views
 
 router = routers.DefaultRouter()
 router.register("auth", views.AuthenticationUserViewSet, basename="auth")
-router.register("user-func", views.UserFunctionsViewSet, basename="user-functions")
+router.register("user-func", views.UserFunctionsViewSet, basename="user-func")
 router.register("users", views.UserViewSet, basename="user")
 router.register("element", views.BusinessElementViewSet, basename="element")
-router.register("product", views.BusinessElementProductViewSet, basename="product-element")
-router.register("order", views.BusinessElementOrderViewSet, basename="order-element")
+router.register("product", views.BusinessElementProductViewSet, basename="product")
+router.register("order", views.BusinessElementOrderViewSet, basename="order")
 router.register("access-rule-element", views.AccessGroupRuleViewSet, basename="access-rule-element")
 router.register("groups", views.GroupsViewSet)
+router.register("order-item", views.BusinessElementOrderItemViewSet, basename="order-item")
 # router.register("my-info-edit", views.MyInfoEditViewSet, basename="my-info-edit")
 
 

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Group, User
 from rest_framework import serializers
 
-from .models import AccessGroupRule, BusinessElement, Order, Product
+from .models import AccessGroupRule, BusinessElement, Order, OrderItem, Product
 
 
 class UserAuthenticationSerilaizer(serializers.ModelSerializer):
@@ -154,11 +154,11 @@ class AccessGroupRuleSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
-
+    
     class Meta:
         model = Order
-        fields = ["id", "name", "description"]
-        read_only_fields = ["id"]
+        fields = ["id", "url", "creator", "created_at"]
+        read_only_fields = ["id", "url", "creator", "created_at"]
         # fields = "__all__"
 
     def create(self, validated_data: dict) -> User:
@@ -175,8 +175,8 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Product
-        fields = ["id", "name", "description"]
-        read_only_fields = ["id"]
+        fields = ["id", "url", "name", "description", "price"]
+        read_only_fields = ["id", "url"]
         # fields = "__all__"
 
     def create(self, validated_data: dict) -> User:
@@ -187,3 +187,20 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
         b_element = BusinessElement.objects.get(type="product")
         prodact = Product.objects.create(**validated_data, element_id=b_element.id)
         return prodact
+
+
+class OrderItemSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = OrderItem
+        fields = ["id", "url", "order", "product", "quantity"]
+        read_only_fields = ["id", "url"]
+
+    def create(self, validated_data: dict) -> User:
+        """
+        Создает и возвращает новый продукт.
+        """
+        # Убираем 'password2', т.к. его нет в модели User
+        b_element = BusinessElement.objects.get(type="orderItem")
+        orderItem = OrderItem.objects.create(**validated_data, element_id=b_element.id)
+        return orderItem

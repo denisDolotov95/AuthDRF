@@ -2,6 +2,7 @@ import uuid
 
 from django.contrib.auth.models import Group, User
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 
@@ -27,15 +28,14 @@ class Order(models.Model):
     Объекты приложения: ордера.
     """
 
-    name = models.CharField(max_length=100, unique=True)
-    description = models.CharField(max_length=100, default=False)
+    created_at = models.DateTimeField(default=timezone.now)
     creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=False)
     element = models.ForeignKey(
         BusinessElement, on_delete=models.CASCADE
     )  # Например, 'order', 'product'
 
     def __str__(self):
-        return self.name
+        return f"Заказ №{self.id} от {self.creator.username}"
 
 
 class Product(models.Model):
@@ -45,13 +45,30 @@ class Product(models.Model):
 
     name = models.CharField(max_length=100, unique=True)
     description = models.CharField(max_length=100, default=False)
+    price = models.DecimalField(
+        max_digits=10, decimal_places=2, null=False, default=False
+    )
     creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=False)
     element = models.ForeignKey(
         BusinessElement, on_delete=models.CASCADE
     )  # Например, 'orders', 'products'
 
     def __str__(self):
-        return self.name
+        return f"Продукт №{self.id} / {self.name} от {self.creator.username}, цена {self.price}"
+
+
+class OrderItem(models.Model):
+    """
+    Промежуточная таблица (Позиции заказа).
+    Связывает Order и Product.
+    """
+
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    quantity = models.PositiveIntegerField(default=1)
+    element = models.ForeignKey(
+        BusinessElement, on_delete=models.CASCADE, default=False
+    )  # Например, 'orders', 'products'
 
 
 class AccessGroupRule(models.Model):
