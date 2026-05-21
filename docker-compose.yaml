@@ -19,7 +19,6 @@ services:
   django:
     container_name: django
     build: .
-    entrypoint: [ "./entrypoint.sh" ]
     command: [ "python3", "manage.py", "runserver", "0.0.0.0:${DJ_PORT}" ]
     environment:
       - DB_HOST=${DB_HOST}
