@@ -30,7 +30,7 @@ SECRET_KEY = "django-insecure-d=ty0hwo$=5(+70tluvt+@ct8+kzxumo9asa*^3qxb*yrrlyx9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0']
 
 
 REST_FRAMEWORK = {
@@ -45,13 +45,13 @@ REST_FRAMEWORK = {
 # Application definition
 
 INSTALLED_APPS = [
-    "pet_project.app",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "pet_project.app",
     "rest_framework",
     "drf_yasg",
 ]
