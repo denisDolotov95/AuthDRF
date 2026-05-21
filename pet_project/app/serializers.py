@@ -78,6 +78,9 @@ class UserRegistrationSerilaizer(serializers.ModelSerializer):
             first_name=validated_data["first_name"],
             is_active=True,
         )
+        group = Group.objects.get(name="guest")
+        if group:
+            user.groups.add(group)
         return user
 
 
