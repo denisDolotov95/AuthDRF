@@ -27,7 +27,7 @@ class Order(models.Model):
     Объекты приложения: ордера.
     """
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.CharField(max_length=100, default=False)
     creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=False)
     element = models.ForeignKey(
@@ -43,7 +43,7 @@ class Product(models.Model):
     Объекты приложения: заказы.
     """
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.CharField(max_length=100, default=False)
     creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=False)
     element = models.ForeignKey(
