@@ -91,12 +91,12 @@ WSGI_APPLICATION = "pet_project.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("POSTGRES_DB", "test"),
-        "USER": os.environ.get("POSTGRES_USER", "postgres"),
-        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "postgres"),
-        "HOST": os.environ.get("POSTGRES_HOST", "192.168.0.101"),  # Or your DB host
-        "PORT": os.environ.get("POSTGRES_PORT", "5432"),  # Default Postgres port
+        "ENGINE": os.environ.get("DB_ENGINE", "django.db.backends.postgresql"),
+        "NAME": os.environ.get("DB_NAME", "test"),
+        "USER": os.environ.get("DB_USER", "postgres"),
+        "PASSWORD": os.environ.get("DB_PASSWORD", "postgres"),
+        "HOST": os.environ.get("DB_HOST", "192.168.0.101"),
+        "PORT": os.environ.get("DB_PORT", "5432"), 
     }
 }
 

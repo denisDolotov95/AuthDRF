@@ -1,0 +1,47 @@
+services:
+
+  postgres:
+    image: postgres
+    shm_size: "1gb"
+    restart: always
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ./pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf:rw
+      - postgresql:/var/lib/postgresql:rw
+    networks:
+      education:
+        ipv4_address: ${POSTGRES_HOST}
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+
+  django:
+    container_name: django
+    build: .
+    entrypoint: [ "./entrypoint.sh" ]
+    command: [ "python3", "manage.py", "runserver", "0.0.0.0:${DJANGO_PORT}" ]
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+    networks:
+      education:
+        ipv4_address: ${DJANGO_HOST}
+    ports:
+      - ${DJANGO_PORT}:${DJANGO_PORT}
+    depends_on:
+      - postgres
+
+volumes:
+  postgresql:
+
+networks:
+  education:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.50.0.0/24
+          gateway: 172.50.0.1
