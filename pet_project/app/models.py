@@ -63,7 +63,7 @@ class OrderItem(models.Model):
     Связывает Order и Product.
     """
 
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField(default=1)
     element = models.ForeignKey(
