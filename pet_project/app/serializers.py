@@ -54,14 +54,22 @@ class UserRegistrationSerilaizer(serializers.ModelSerializer):
         }  # Без возврата пароля через GET
 
     def validate(self, data: dict) -> dict:
-        """
-        Проверка совпадения пароля.
+        """Проверка совпадения пароля.
         """
         if data["password"] != data["password2"]:
             raise serializers.ValidationError(
                 {"password": "Passwords must be the same."}
             )
         return data
+
+    def validate_email(self, value):
+        """Проеряем уникальность пользователя в базе.
+        """
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError(
+                "The user already exists with the current email address."
+            )
+        return value
 
     def create(self, validated_data: dict) -> User:
         """
@@ -103,14 +111,6 @@ class UserInfoSerializer(serializers.ModelSerializer):
             "groups",
         ]
         read_only_fields = ["last_login", "date_joined", "is_superuser", "groups"]
-
-    def validate_email(self, value):
-        # Проверяем уникальность при создании нового пользователя
-        if User.objects.filter(email=value).exists():
-            raise serializers.ValidationError(
-                "The user already exists with the current email address."
-            )
-        return value
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
