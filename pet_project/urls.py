@@ -20,6 +20,8 @@ from django.urls import include, path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions, routers
+from rest_framework_simplejwt.views import (TokenObtainPairView,
+                                            TokenRefreshView)
 
 from pet_project.app import views
 
@@ -31,8 +33,12 @@ router.register("groups", views.GroupsViewSet)
 router.register("element", views.BusinessElementViewSet, basename="element")
 router.register("product", views.BusinessElementProductViewSet, basename="product")
 router.register("order", views.BusinessElementOrderViewSet, basename="order")
-router.register("access-rule-element", views.AccessGroupRuleViewSet, basename="access-rule-element")
-router.register("order-item", views.BusinessElementOrderItemViewSet, basename="orderitem")
+router.register(
+    "access-rule-element", views.AccessGroupRuleViewSet, basename="access-rule-element"
+)
+router.register(
+    "order-item", views.BusinessElementOrderItemViewSet, basename="orderitem"
+)
 # router.register("my-info-edit", views.MyInfoEditViewSet, basename="my-info-edit")
 
 
@@ -52,6 +58,8 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("", include(router.urls)),
     path("admin/", admin.site.urls),
+    path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     # path("api/auth/", include("rest_framework.urls", namespace="rest_framework")),
     path(
         "swagger<format>/", schema_view.without_ui(cache_timeout=0), name="schema-json"

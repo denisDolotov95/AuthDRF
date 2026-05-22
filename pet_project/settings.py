@@ -9,14 +9,16 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
+
 import os
+from datetime import timedelta
 from pathlib import Path
 
 # Castom settings
 SESSION_COOKIE_AGE = 3600
-#SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = "/"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,16 +32,24 @@ SECRET_KEY = "django-insecure-d=ty0hwo$=5(+70tluvt+@ct8+kzxumo9asa*^3qxb*yrrlyx9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1']
+ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1"]
 
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.SessionAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),  # Short-lived for security
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),  # Long-lived for session persistence
+    "ROTATE_REFRESH_TOKENS": True,  # Issues a new refresh token when used
+    "BLACKLIST_AFTER_ROTATION": True,  # Optional: requires 'rest_framework_simplejwt.token_blacklist'
 }
 
 # Application definition
@@ -96,7 +106,7 @@ DATABASES = {
         "USER": os.environ.get("DB_USER", "postgres"),
         "PASSWORD": os.environ.get("DB_PASSWORD", "postgres"),
         "HOST": os.environ.get("DB_HOST", "192.168.0.101"),
-        "PORT": os.environ.get("DB_PORT", "5432"), 
+        "PORT": os.environ.get("DB_PORT", "5432"),
     }
 }
 
