@@ -117,16 +117,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        # fields = [
-        #     "url",
-        #     "username",
-        #     "first_name",
-        #     "last_name",
-        #     "is_superuser",
-        #     "is_active",
-        #     "email",
-        #     "date_joined",
-        # ]
         fields = "__all__"
         read_only_fields = ["date_joined", "is_active", "url"]
 
@@ -177,7 +167,6 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
         model = Product
         fields = ["id", "url", "name", "description", "price"]
         read_only_fields = ["id", "url"]
-        # fields = "__all__"
 
     def create(self, validated_data: dict) -> User:
         """
